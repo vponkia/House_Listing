@@ -1,0 +1,84 @@
+outline for a House Listing system that 
+uses Node.js, Express.js, EJS, sessions and cookies, Mongoose, and React.
+
+npm init -y
+
+npm install nodejs nodemon express bodyParser session cookies mongoose ejs
+
+**1. Planning and Design**
+Before starting with the development, the first step is to define the features of the project,
+ the database schema, and the overall architecture of the application.
+
+- **Features:**
+
+  - User Registration and Login
+  - Add/Update/Delete houses (for registered users)
+  - Search and View house listings
+  - Contact the house owner
+
+- **Database Schema:**
+
+  - Users: {userID, email, password, name}
+  - Houses: {houseID, title, description, price, location, photos, userID}
+  - Sessions: {sessionID, userID, expireTime}
+
+   
+
+**2. Backend Development**
+Start by setting up your Node.js and Express.js server.
+- **Database Connection**: Use Mongoose to connect your application with MongoDB.
+- **User Registration and Login**: Create these routes using Express. Save the data into MongoDB using Mongoose. Passwords should be hashed before being saved. You can use libraries like bcrypt for this.
+- **Sessions**: Use express-session for handling sessions.
+     Whenever a user logs in, create a new session.
+
+- **House Listing**: Create routes to add, update, delete and view house listings. 
+All these routes should be protected i.e., only authenticated users can access these routes.
+
+- **Search Functionality**: Create a route that gets the house based on search parameters.
+
+- **APIs**: Create REST APIs to perform CRUD operations.
+
+
+**3. Frontend Development**
+You can start the frontend development parallelly using EJS and React.
+- **Landing Page**: The landing page will display a list of all the house listings.
+- **Sign Up and Sign In Page**: These pages will be used for user registration and login.
+- **Dashboard**: If the user is authenticated, they can add, update or delete their house listings from the dashboard.
+- **House Page**: If a user clicks on a house from the landing page, they can view more
+ details about the house. If the user is the owner of the house, they should have options to 
+ update or delete the house.
+- **Search**: There should be a search feature on the landing page where users can search for houses based on location, price, etc.
+
+
+**4. Security**
+- **Password Hashing**: As mentioned earlier, always hash the passwords before saving them to the database.
+- **Authentication and Authorization**: Protect the routes that should only be accessible by the \
+authenticated users. You can use middleware to check if a user is authenticated before they 
+access certain routes.
+- **Validation**: Validate all the user inputs before using them in your application or storing them in your database. You can use libraries like Joi for this.
+
+
+**5. Code Refactoring**
+Refactor your code regularly to keep it clean and maintainable. Some practices to follow are:
+
+- Use meaningful names for your variables, functions, and classes.
+- Keep your functions short and make sure each function does only one thing.
+- Avoid duplicating code.
+- Use comments to describe what your code does.
+
+
+
+**6. Testing**
+Write unit tests and integration tests for your application. 
+This will ensure that your application works as expected even after you 
+make changes to your code in the future.
+
+
+
+**7. Deployment**
+
+Finally, deploy your application. You can use platforms like Heroku 
+or AWS for deploying your application.
+This is a basic outline for your project. 
+As you build it, you will probably need to add more features and 
+make some adjustments to this plan. Good luck with your project!
