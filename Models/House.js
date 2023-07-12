@@ -6,7 +6,7 @@ const houseSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   location: { type: String, required: true },
   photos: [{ type: String }],
-  userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  userID: { type: mongoose.Schema.Types.ObjectId, ref: 'SignUpIn' }
 });
 
 const House = mongoose.model('House', houseSchema);

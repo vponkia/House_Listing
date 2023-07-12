@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Delete House</title>
+</head>
+<body>
+  <h1>Delete House</h1>
+  <p>Are you sure you want to delete this house?</p>
+  <form action="/delete-house/<%= house._id %>" method="POST">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit">Delete</button>
+    <a href="/dashboard">Cancel</a>
+  </form>
+</body>
+</html>
