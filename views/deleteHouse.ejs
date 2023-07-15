@@ -10,7 +10,7 @@
   <form action="/delete-house/<%= house._id %>" method="POST">
     <input type="hidden" name="_method" value="DELETE">
     <button type="submit">Delete</button>
-    <a href="/dashboard">Cancel</a>
   </form>
+  <button onclick="location.href='/houses'">View All Houses</button>
 </body>
 </html>

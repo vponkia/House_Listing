@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Houses</title>
+  <style>
+    /* Style for house blocks or table */
+    .house-block {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Houses</h1>
+  <% if (houses.length > 0) { %>
+    <!-- Display houses in blocks -->
+    <% houses.forEach(house => { %>
+      <div class="house-block">
+        <h3><%= house.title %></h3>
+        <p><strong>Description:</strong> <%= house.description %></p>
+        <p><strong>Price:</strong> <%= house.price %></p>
+        <p><strong>Location:</strong> <%= house.location %></p>
+        <p><strong>Photos:</strong> <%= house.photos %></p>
+        <button onclick="location.href='/update-house/<%= house._id %>'">Update House Details</button>
+        <button onclick="location.href='/delete-house/<%= house._id %>'">Delete House</button>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No houses available.</p>
+  <% } %>
+  <button onclick="location.href='/add-house'">Add New House</button>
+  <button onclick="location.href='/dashboard'">DashBoard</button>
+</body>
+</html>

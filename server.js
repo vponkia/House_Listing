@@ -13,6 +13,7 @@ const port = 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -34,7 +35,7 @@ const authenticateUser = (req, res, next) => {
 };
 
 app.get('/', (req, res) => {
-  res.send('Welcome to the home page');
+  res.render('mainDashboard');
 });
 
 app.get('/signup', (req, res) => {
@@ -48,6 +49,13 @@ app.get('/signin', (req, res) => {
 app.post('/signup', async (req, res) => {
   try {
     const { userID, username, password, email } = req.body;
+    const existingUser = await Sign.findOne({ username: username.toLowerCase() });
+
+    if (existingUser) {
+      res.render('signup', { error: 'Username already exists' });
+      return;
+    }
+
     const newUser = new Sign({ userID, username, password, email });
     await newUser.save();
     res.send('User registered successfully');
@@ -57,13 +65,15 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+
+
 app.post('/signin', async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await Sign.findOne({ username: username.toLowerCase() });
 
     if (!user) {
-      res.status(404).send('User not found');
+      return res.render('userNotFound. Please SignUp First', { username });
       return;
     }
 
@@ -84,6 +94,24 @@ app.get('/dashboard', authenticateUser, (req, res) => {
   const user = req.session.user;
   res.render('dashboard', { user });
 });
+
+app.get('/houses', authenticateUser, async (req, res) => {
+  try {
+    const houses = await Home.find();
+
+    if (houses.length === 0) {
+      res.render('houses', { error: 'No houses found for the user' });
+      return;
+    }
+    res.render('houses', { houses });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error retrieving houses');
+  }
+});
+
+
+
 
 app.get('/add-house', authenticateUser, (req, res) => {
   res.render('addHouse'); // Render the add-house form view
@@ -118,6 +146,7 @@ app.get('/update-house/:id', authenticateUser, async (req, res) => {
     res.status(500).send('Error retrieving house');
   }
 });
+
 
 app.post('/update-house/:id', authenticateUser, async (req, res) => {
   try {
