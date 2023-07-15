@@ -6,9 +6,12 @@
 </head>
 <body>
   <h1>Sign In</h1>
+  <% if (typeof error !== 'undefined' && error) { %>
+    <p style="color: red;"><%= error %></p>
+  <% } %>
   <form action="/signin" method="POST">
     <label for="username">Username:</label>
-    <input type="text" name="username" id="username" required><br>
+    <input type="text" name="username" id="username" value="<%= typeof username !== 'undefined' ? username : '' %>" required><br>
 
     <label for="password">Password:</label>
     <input type="password" name="password" id="password" required><br>

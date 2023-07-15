@@ -52,19 +52,18 @@ app.post('/signup', async (req, res) => {
     const existingUser = await Sign.findOne({ username: username.toLowerCase() });
 
     if (existingUser) {
-      res.render('signup', { error: 'Username already exists' });
+      res.render('signup', { error: 'Username already exists', success: '' });
       return;
     }
 
     const newUser = new Sign({ userID, username, password, email });
     await newUser.save();
-    res.send('User registered successfully');
+    res.render('signup', { success: 'User registered successfully', error: '' });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error registering user');
   }
 });
-
 
 
 app.post('/signin', async (req, res) => {
@@ -73,20 +72,16 @@ app.post('/signin', async (req, res) => {
     const user = await Sign.findOne({ username: username.toLowerCase() });
 
     if (!user) {
-      return res.render('userNotFound. Please SignUp First', { username });
-      return;
+      return res.render('userNotFound', { username: username });
     }
-
     if (password !== user.password) {
-      res.status(401).send('Incorrect password');
-      return;
+      return res.render('signin', { error: 'Incorrect password', username: '' });
     }
-
     req.session.user = user;
     res.redirect('/dashboard');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error signing in');
+   res.status(500).send('Error signing in');
   }
 });
 
@@ -95,27 +90,31 @@ app.get('/dashboard', authenticateUser, (req, res) => {
   res.render('dashboard', { user });
 });
 
+app.get('/mainDashboard', (req, res) => {
+  req.session.destroy(); // Destroy the session to logout the user
+  res.redirect('/'); // Redirect to the mainDashboard page
+});
+
 app.get('/houses', authenticateUser, async (req, res) => {
   try {
-    const houses = await Home.find();
+    const userID = req.session.user._id;
+    const houses = await Home.find({ userID });
 
     if (houses.length === 0) {
-      res.render('houses', { error: 'No houses found for the user' });
+      res.render('houses', { error: 'No houses found for the user', houses: [] });
       return;
     }
+
     res.render('houses', { houses });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error retrieving houses');
   }
 });
-
-
-
-
 app.get('/add-house', authenticateUser, (req, res) => {
   res.render('addHouse'); // Render the add-house form view
 });
+
 
 app.post('/add-house', authenticateUser, async (req, res) => {
   try {
@@ -123,7 +122,7 @@ app.post('/add-house', authenticateUser, async (req, res) => {
     const userID = req.session.user._id;
     const newHouse = new Home({ title, description, price, location, photos, userID });
     await newHouse.save();
-    res.send('House added successfully');
+    res.redirect('/houses');
   } catch (err) {
     console.error(err);
     res.status(500).send('Error adding house');
@@ -133,7 +132,8 @@ app.post('/add-house', authenticateUser, async (req, res) => {
 app.get('/update-house/:id', authenticateUser, async (req, res) => {
   try {
     const houseID = req.params.id;
-    const house = await Home.findById(houseID);
+    const userID = req.session.user._id;
+    const house = await Home.findOne({ _id: houseID, userID });
 
     if (!house) {
       res.status(404).send('House not found');
@@ -147,19 +147,19 @@ app.get('/update-house/:id', authenticateUser, async (req, res) => {
   }
 });
 
-
 app.post('/update-house/:id', authenticateUser, async (req, res) => {
   try {
     const houseID = req.params.id;
+    const userID = req.session.user._id;
     const { title, description, price, location, photos } = req.body;
-    const updatedHouse = await Home.findByIdAndUpdate(houseID, { title, description, price, location, photos });
+    const updatedHouse = await Home.findOneAndUpdate({ _id: houseID, userID }, { title, description, price, location, photos });
 
     if (!updatedHouse) {
       res.status(404).send('House not found');
       return;
     }
 
-    res.send('House updated successfully');
+    res.redirect('/houses');
   } catch (err) {
     console.error(err);
     res.status(500).send('Error updating house');
@@ -169,7 +169,8 @@ app.post('/update-house/:id', authenticateUser, async (req, res) => {
 app.get('/delete-house/:id', authenticateUser, async (req, res) => {
   try {
     const houseID = req.params.id;
-    const house = await Home.findById(houseID);
+    const userID = req.session.user._id;
+    const house = await Home.findOne({ _id: houseID, userID });
 
     if (!house) {
       res.status(404).send('House not found');
@@ -186,20 +187,20 @@ app.get('/delete-house/:id', authenticateUser, async (req, res) => {
 app.post('/delete-house/:id', authenticateUser, async (req, res) => {
   try {
     const houseID = req.params.id;
-    const deletedHouse = await Home.findByIdAndRemove(houseID);
+    const userID = req.session.user._id;
+    const deletedHouse = await Home.findOneAndRemove({ _id: houseID, userID });
 
     if (!deletedHouse) {
       res.status(404).send('House not found');
       return;
     }
 
-    res.send('House deleted successfully');
+    res.redirect('/houses');
   } catch (err) {
     console.error(err);
     res.status(500).send('Error deleting house');
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

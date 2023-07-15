@@ -14,6 +14,7 @@
 </head>
 <body>
   <h1>Houses</h1>
+
   <% if (houses.length > 0) { %>
     <!-- Display houses in blocks -->
     <% houses.forEach(house => { %>
@@ -28,9 +29,10 @@
       </div>
     <% }) %>
   <% } else { %>
-    <p>No houses available.</p>
+    <p><%= error %></p>
   <% } %>
+
   <button onclick="location.href='/add-house'">Add New House</button>
-  <button onclick="location.href='/dashboard'">DashBoard</button>
+  <button onclick="location.href='/dashboard'">Dashboard</button>
 </body>
 </html>
