@@ -58,7 +58,7 @@ app.post('/signup', async (req, res) => {
 
     const newUser = new Sign({ userID, username, password, email });
     await newUser.save();
-    res.render('signup', { success: 'User registered successfully', error: '' });
+    res.redirect('/signin'); // Redirect to the sign-in page
   } catch (err) {
     console.error(err);
     res.status(500).send('Error registering user');
