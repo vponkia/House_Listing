@@ -202,6 +202,32 @@ app.post('/delete-house/:id', authenticateUser, async (req, res) => {
   }
 });
 
+
+// app.get('/search', authenticateUser, async (req, res) => {
+  
+//   const { location, price } = req.query;
+  
+//     const houses = await Home.find({ location, price });
+
+//     const filteredHouses = houses.filter(house => {
+     
+//     const isLocationMatched = location ? house.location.toLowerCase().includes(location.toLowerCase()) : true;
+//     const isPriceMatched = price ? house.price <= parseInt(price) : true;
+//     return isLocationMatched && isPriceMatched;
+//   });
+//   console.log("hiiiiiii")
+//   res.render('houses', { houses: filteredHouses });  
+// });
+
+
+// Aa simple valu che khali location and price pass kirne display krava mate if aa thai jai to upr comment valu filtered
+app.get('/search', (req, res) => {
+  const location = req.query.location;
+  const price = req.query.price;
+  console.log(req.query);
+  res.render('search-results', { location, price });
+});
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

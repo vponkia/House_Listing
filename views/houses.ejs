@@ -15,6 +15,15 @@
 <body>
   <h1>Houses</h1>
 
+  <!-- Search -->
+  <form action="/search" method="GET">
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location" placeholder="Enter location">
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" placeholder="Enter price">
+    <button type="submit">Search</button>
+  </form>
+
   <% if (houses.length > 0) { %>
     <!-- Display houses in blocks -->
     <% houses.forEach(house => { %>
