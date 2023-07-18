@@ -227,7 +227,7 @@ app.get('/search', (req, res) => {
   console.log(req.query);
   res.render('search-results', { location, price });
 });
-//tru
+//truu
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
